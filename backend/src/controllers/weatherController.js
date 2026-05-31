@@ -1,4 +1,8 @@
 const Weather = require("../models/Weather");
+const {
+	fetchCurrentWeather,
+	fetchForecast
+} = require("../services/weatherService");
 
 const handleError = (res, error) => {
 	res.status(500).json({
@@ -6,9 +10,42 @@ const handleError = (res, error) => {
 	});
 };
 
+const upsertWeather = async (
+	location,
+	current,
+	forecast
+) => {
+	const update = {
+		location,
+		fetchedAt: new Date(),
+		source: "OpenWeather"
+	};
+
+	if (current) {
+		update.current = current;
+	}
+
+	if (forecast) {
+		update.forecast = forecast;
+	}
+
+	return Weather.findOneAndUpdate(
+		{ location },
+		update,
+		{ new: true, upsert: true }
+	);
+};
+
 exports.createWeatherCache = async (req, res) => {
 	try {
-		const entry = await Weather.create(req.body);
+		const { location, current, forecast } =
+			req.body;
+
+		const entry = await upsertWeather(
+			location,
+			current,
+			forecast
+		);
 
 		res.status(201).json(entry);
 	} catch (error) {
@@ -20,12 +57,26 @@ exports.getCurrentWeather = async (req, res) => {
 	try {
 		const location = req.query.location;
 
-		const entry = await Weather.findOne({
+		const current = await fetchCurrentWeather(
 			location
-		}).sort({ fetchedAt: -1 });
+		);
+
+		const entry = await upsertWeather(
+			location,
+			current,
+			null
+		);
 
 		res.json(entry);
 	} catch (error) {
+		const cached = await Weather.findOne({
+			location: req.query.location
+		}).sort({ fetchedAt: -1 });
+
+		if (cached) {
+			return res.json(cached);
+		}
+
 		handleError(res, error);
 	}
 };
@@ -34,12 +85,26 @@ exports.getForecast = async (req, res) => {
 	try {
 		const location = req.query.location;
 
-		const entry = await Weather.findOne({
+		const forecast = await fetchForecast(
 			location
-		}).sort({ fetchedAt: -1 });
+		);
+
+		const entry = await upsertWeather(
+			location,
+			null,
+			forecast
+		);
 
 		res.json(entry ? entry.forecast : []);
 	} catch (error) {
+		const cached = await Weather.findOne({
+			location: req.query.location
+		}).sort({ fetchedAt: -1 });
+
+		if (cached) {
+			return res.json(cached.forecast || []);
+		}
+
 		handleError(res, error);
 	}
 };

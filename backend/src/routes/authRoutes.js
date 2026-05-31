@@ -15,13 +15,26 @@ const protect = require(
   "../middleware/authMiddleware"
 );
 
+const { validate } = require(
+  "../middleware/validationMiddleware"
+);
+
+const {
+  registerValidation,
+  loginValidation
+} = require(
+  "../validators/authValidator"
+);
+
 router.post(
   "/register",
+  validate(registerValidation),
   registerUser
 );
 
 router.post(
   "/login",
+  validate(loginValidation),
   loginUser
 );
 

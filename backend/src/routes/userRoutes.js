@@ -12,6 +12,18 @@ const roleMiddleware =
     "../middleware/roleMiddleware"
   );
 
+const { validate } = require(
+  "../middleware/validationMiddleware"
+);
+
+const {
+  userIdParam,
+  createUserValidation,
+  updateUserValidation
+} = require(
+  "../validators/userValidator"
+);
+
 const {
   createUser,
   getUsers,
@@ -33,6 +45,7 @@ router.post(
   "/",
   protect,
   roleMiddleware("Admin"),
+  validate(createUserValidation),
   createUser
 );
 
@@ -40,6 +53,7 @@ router.get(
   "/:id",
   protect,
   roleMiddleware("Admin"),
+  validate(userIdParam),
   getUserById
 );
 
@@ -47,6 +61,7 @@ router.put(
   "/:id",
   protect,
   roleMiddleware("Admin"),
+  validate([...userIdParam, ...updateUserValidation]),
   updateUser
 );
 
@@ -54,6 +69,7 @@ router.delete(
   "/:id",
   protect,
   roleMiddleware("Admin"),
+  validate(userIdParam),
   deleteUser
 );
 
