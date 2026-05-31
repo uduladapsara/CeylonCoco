@@ -22,6 +22,24 @@ const labourRoutes =
 const taskRoutes =
   require("./routes/taskRoutes");
 
+const financeRoutes =
+  require("./routes/financeRoutes");
+
+const salesRoutes =
+  require("./routes/salesRoutes");
+
+const weatherRoutes =
+  require("./routes/weatherRoutes");
+
+const chatbotRoutes =
+  require("./routes/chatbotRoutes");
+
+const transportRoutes =
+  require("./routes/transportRoutes");
+
+const feedbackRoutes =
+  require("./routes/feedbackRoutes");
+
 const app = express();
 
 app.use(cors());
@@ -67,6 +85,36 @@ app.use(
 app.use(
   "/api/tasks",
   taskRoutes
+);
+
+app.use(
+  "/api/finance",
+  financeRoutes
+);
+
+app.use(
+  "/api/sales",
+  salesRoutes
+);
+
+app.use(
+  "/api/weather",
+  weatherRoutes
+);
+
+app.use(
+  "/api/chatbot",
+  chatbotRoutes
+);
+
+app.use(
+  "/api/transport",
+  transportRoutes
+);
+
+app.use(
+  "/api/feedback",
+  feedbackRoutes
 );
 
 module.exports = app;
