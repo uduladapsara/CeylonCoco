@@ -10,6 +10,9 @@ const authRoutes =
 const userRoutes =
   require("./routes/userRoutes");
 
+const plantationRoutes =
+  require("./routes/plantationRoutes");
+
 const app = express();
 
 app.use(cors());
@@ -35,6 +38,11 @@ app.use(
 app.use(
   "/api/users",
   userRoutes
+);
+
+app.use(
+  "/api/plantations",
+  plantationRoutes
 );
 
 module.exports = app;
