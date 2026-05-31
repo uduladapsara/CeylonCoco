@@ -13,6 +13,15 @@ const userRoutes =
 const plantationRoutes =
   require("./routes/plantationRoutes");
 
+const inventoryRoutes =
+  require("./routes/inventoryRoutes");
+
+const labourRoutes =
+  require("./routes/labourRoutes");
+
+const taskRoutes =
+  require("./routes/taskRoutes");
+
 const app = express();
 
 app.use(cors());
@@ -43,6 +52,21 @@ app.use(
 app.use(
   "/api/plantations",
   plantationRoutes
+);
+
+app.use(
+  "/api/inventory",
+  inventoryRoutes
+);
+
+app.use(
+  "/api/labour",
+  labourRoutes
+);
+
+app.use(
+  "/api/tasks",
+  taskRoutes
 );
 
 module.exports = app;
