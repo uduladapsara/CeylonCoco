@@ -13,6 +13,7 @@ const roleMiddleware =
   );
 
 const {
+  createUser,
   getUsers,
   getUserById,
   updateUser,
@@ -26,6 +27,13 @@ router.get(
   protect,
   roleMiddleware("Admin"),
   getUsers
+);
+
+router.post(
+  "/",
+  protect,
+  roleMiddleware("Admin"),
+  createUser
 );
 
 router.get(
