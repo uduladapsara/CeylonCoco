@@ -12,6 +12,7 @@ const Navbar = () => {
         <NavLink to="/about">About</NavLink>
         <NavLink to="/contact">Contact</NavLink>
         <NavLink to="/shop">Shop</NavLink>
+        {!token ? <NavLink to="/register">Register</NavLink> : null}
       </div>
       {token ? (
         <button className="cta-button" type="button" onClick={logout}>

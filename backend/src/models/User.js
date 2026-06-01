@@ -2,9 +2,18 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    firstName: {
       type: String,
       required: true
+    },
+
+    lastName: {
+      type: String,
+      required: true
+    },
+
+    name: {
+      type: String
     },
 
     email: {
@@ -32,6 +41,26 @@ const userSchema = new mongoose.Schema(
       default: "Customer"
     },
 
+    location: {
+      province: {
+        type: String
+      },
+      district: {
+        type: String
+      },
+      mapLocation: {
+        address: {
+          type: String
+        },
+        lat: {
+          type: Number
+        },
+        lng: {
+          type: Number
+        }
+      }
+    },
+
     phone: {
       type: String
     },
@@ -43,7 +72,7 @@ const userSchema = new mongoose.Schema(
 
     status: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   {

@@ -9,10 +9,12 @@ exports.createUser = async (
   try {
 
     const {
-      name,
+      firstName,
+      lastName,
       email,
       password,
       role,
+      location,
       phone,
       status,
       profileImage
@@ -34,10 +36,13 @@ exports.createUser = async (
       await bcrypt.hash(password, salt);
 
     const user = await User.create({
-      name,
+      firstName,
+      lastName,
+      name: `${firstName} ${lastName}`.trim(),
       email,
       password: hashedPassword,
       role,
+      location,
       phone,
       status,
       profileImage
@@ -45,9 +50,12 @@ exports.createUser = async (
 
     res.status(201).json({
       _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
       name: user.name,
       email: user.email,
       role: user.role,
+      location: user.location,
       phone: user.phone,
       status: user.status,
       profileImage: user.profileImage,
@@ -106,9 +114,15 @@ exports.updateUser = async (
       });
   }
 
-  user.name =
-    req.body.name ||
-    user.name;
+  user.firstName =
+    req.body.firstName ||
+    user.firstName;
+
+  user.lastName =
+    req.body.lastName ||
+    user.lastName;
+
+  user.name = `${user.firstName} ${user.lastName}`.trim();
 
   user.email =
     req.body.email ||
@@ -117,6 +131,17 @@ exports.updateUser = async (
   user.role =
     req.body.role ||
     user.role;
+
+  if (req.body.location) {
+    user.location = {
+      ...user.location,
+      ...req.body.location,
+      mapLocation: {
+        ...(user.location || {}).mapLocation,
+        ...(req.body.location.mapLocation || {})
+      }
+    };
+  }
 
   user.phone =
     req.body.phone ||

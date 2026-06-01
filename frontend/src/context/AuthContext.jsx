@@ -69,7 +69,9 @@ const AuthProvider = ({ children }) => {
 		setState((prev) => ({ ...prev, loading: true }));
 		try {
 			const data = await authService.register(payload);
-			setSession(data);
+			if (data.token) {
+				setSession(data);
+			}
 			return data;
 		} catch (error) {
 			setState((prev) => ({

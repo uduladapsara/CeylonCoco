@@ -5,11 +5,19 @@ const generateToken = require("../utils/generateToken");
 exports.registerUser = async (req, res) => {
   try {
     const {
-      name,
+      firstName,
+      lastName,
       email,
       password,
-      role
+      role,
+      location
     } = req.body;
+
+    if (role === "Admin") {
+      return res.status(403).json({
+        message: "Admin role cannot be self-registered"
+      });
+    }
 
     const userExists = await User.findOne({
       email
@@ -27,18 +35,23 @@ exports.registerUser = async (req, res) => {
       await bcrypt.hash(password, salt);
 
     const user = await User.create({
-      name,
+      firstName,
+      lastName,
+      name: `${firstName} ${lastName}`.trim(),
       email,
       password: hashedPassword,
-      role
+      role,
+      location,
+      status: false
     });
 
     res.status(201).json({
+      message: "Registration submitted. Await admin approval.",
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
-      token: generateToken(user._id)
+      status: user.status
     });
 
   } catch (error) {
@@ -65,6 +78,12 @@ exports.loginUser = async (req, res) => {
         user.password
       ))
     ) {
+      if (!user.status) {
+        return res.status(403).json({
+          message: "Account pending admin approval"
+        });
+      }
+
       res.json({
         _id: user._id,
         name: user.name,

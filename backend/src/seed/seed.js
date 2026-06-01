@@ -21,22 +21,31 @@ const seedUsers = async () => {
 
   return User.insertMany([
     {
+      firstName: "Admin",
+      lastName: "User",
       name: "Admin User",
       email: "admin@gmail.com",
       password,
-      role: "Admin"
+      role: "Admin",
+      status: true
     },
     {
+      firstName: "Farm",
+      lastName: "Manager",
       name: "Farm Manager",
       email: "manager@cocosmart.local",
       password,
-      role: "FarmManager"
+      role: "FarmManager",
+      status: false
     },
     {
+      firstName: "Customer",
+      lastName: "User",
       name: "Customer",
       email: "customer@cocosmart.local",
       password,
-      role: "Customer"
+      role: "Customer",
+      status: false
     }
   ]);
 };

@@ -7,7 +7,8 @@ const userIdParam = [
 ];
 
 const createUserValidation = [
-	body("name").trim().notEmpty(),
+	body("firstName").trim().notEmpty(),
+	body("lastName").trim().notEmpty(),
 	body("email").isEmail(),
 	body("password").isLength({ min: 6 }),
 	body("role")
@@ -21,13 +22,21 @@ const createUserValidation = [
 			"Customer",
 			"Farmer"
 		]),
+	body("location").optional().isObject(),
+	body("location.province").optional().isString(),
+	body("location.district").optional().isString(),
+	body("location.mapLocation").optional().isObject(),
+	body("location.mapLocation.address").optional().isString(),
+	body("location.mapLocation.lat").optional().isNumeric(),
+	body("location.mapLocation.lng").optional().isNumeric(),
 	body("phone").optional().isString(),
 	body("status").optional().isBoolean(),
 	body("profileImage").optional().isString()
 ];
 
 const updateUserValidation = [
-	body("name").optional().isString(),
+	body("firstName").optional().isString(),
+	body("lastName").optional().isString(),
 	body("email").optional().isEmail(),
 	body("role")
 		.optional()
@@ -40,6 +49,13 @@ const updateUserValidation = [
 			"Customer",
 			"Farmer"
 		]),
+	body("location").optional().isObject(),
+	body("location.province").optional().isString(),
+	body("location.district").optional().isString(),
+	body("location.mapLocation").optional().isObject(),
+	body("location.mapLocation.address").optional().isString(),
+	body("location.mapLocation.lat").optional().isNumeric(),
+	body("location.mapLocation.lng").optional().isNumeric(),
 	body("phone").optional().isString(),
 	body("status").optional().isBoolean(),
 	body("profileImage").optional().isString()
